@@ -1,10 +1,17 @@
 <template>
   <div class="login-container">
-    <div class="side-block"></div>
+    <div class="side-block">
+      <div class="header">
+        <h1>Crowdbotics</h1>
+      </div>
+      <div class="illustration">
+        <img class="intro-image" src="@/assets/app-illustration.png" alt="" />
+      </div>
+    </div>
 
     <div class="field-block">
       <form>
-        <h3 class="header">Welcome back!</h3>
+        <h3 class="login-header">Welcome back!</h3>
 
         <div class="form-group">
           <label>Email</label>
@@ -43,7 +50,7 @@
 
           <input
             type="button"
-            @click="login"
+            @click="goToSignup"
             value="Create an account"
             class="primary-button"
           />
@@ -54,33 +61,38 @@
 </template>
 
 <script>
-// import { LOGIN } from "@/store/actions.type";
 import { mapState } from "vuex";
+import router from "../router";
+
 export default {
-  name: "login",
+  name: "Login",
   data() {
     return {
-      email: "",
-      password: "",
+      email: "demo110@demo.com",
+      password: "12345678",
     };
   },
   computed: {
     ...mapState({
-      //   errors: (state) => state.user.errors,
+      errors: (state) => state.auth.errors,
     }),
   },
   methods: {
-    // async login() {
-    //   try {
-    //     const credentials = {
-    //       email: this.email,
-    //       password: this.password,
-    //     };
-    //     this.$store.dispatch(LOGIN, credentials);
-    //   } catch (error) {
-    //     console.log(error.response.data.msg);
-    //   }
-    // },
+    async login() {
+      try {
+        const credentials = {
+          email: this.email,
+          password: this.password,
+        };
+        this.$store.dispatch("login", credentials);
+      } catch (error) {
+        console.log(error.response.data.msg);
+      }
+    },
+
+    goToSignup() {
+      router.push("/signup");
+    },
   },
 };
 </script>
@@ -106,6 +118,24 @@ export default {
   border-radius: 15px;
 }
 
+.header {
+  margin: 20px 40px;
+}
+
+.header h1 {
+  font-size: 28px;
+  color: #0c2867;
+}
+
+.illustration {
+  display: flex;
+  justify-content: center;
+}
+
+.intro-image {
+  width: 75%;
+}
+
 .field-block {
   flex: 1;
   background: #0c2867;
@@ -116,9 +146,10 @@ form {
   padding: 25px 50px;
 }
 
-.header {
+.login-header {
   font-size: 48px;
   color: #ffffff;
+  margin: 50px 0;
 }
 
 .form-group {
@@ -137,6 +168,16 @@ form {
   border: 3px solid #ffffff;
   border-radius: 10px;
   padding: 20px 15px;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.form-group input:focus {
+  background: rgb(255 255 255 / 10%);
+  border: 3px solid #ffffff;
+  border-radius: 10px;
+  padding: 20px 15px;
+  outline: none;
 }
 
 .form-group .form-control::placeholder {
@@ -151,10 +192,27 @@ form {
   border: 0;
   width: 100%;
   padding: 20px;
+  margin: 15px 0px;
   color: #ffffff;
   font-size: 18px;
   font-weight: 700;
   font-family: "Montserrat";
+  cursor: pointer;
+}
+
+.primary-button:active {
+  background: #2e53e6;
+  border-radius: 10px;
+  border: 0;
+  width: 100%;
+  padding: 20px;
+  margin: 15px 0px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: "Montserrat";
+  cursor: pointer;
+  transform: scale(0.98);
 }
 
 .signup-label {
@@ -168,5 +226,7 @@ form {
   color: #62f9fc;
   font-size: 18px;
   text-align: right;
+  margin: 15px 0;
+  cursor: pointer;
 }
 </style>

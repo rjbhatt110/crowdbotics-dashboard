@@ -2,7 +2,10 @@
   <div class="dashboard-container">
     <div class="header">
       <h1>Crowdbotics</h1>
-      <h3>Pricing? <span>Check our plans</span></h3>
+      <div class="menu">
+        <h3>Plans</h3>
+        <h3 @click="logout">Logout</h3>
+      </div>
     </div>
     <div class="content-block">
       <div class="page-header">
@@ -11,84 +14,37 @@
       </div>
 
       <div class="app-list">
-        <div class="app-card">
+        <div v-for="(item, index) in getAppList" :key="index" class="app-card">
           <div class="app-framework">
-            <img src="@/assets/django.png" alt="" />
+            <img
+              v-if="item.framework === 'Django'"
+              src="@/assets/django.png"
+              alt=""
+            />
+            <img
+              v-if="item.framework === 'React Native'"
+              src="@/assets/react.png"
+              alt=""
+            />
           </div>
           <div class="app-details">
-            <h1 class="app-title">Drift app</h1>
-            <h4 class="app-type">Web Application</h4>
+            <h1 class="app-title">{{ item.name }}</h1>
+            <h4 class="app-type">{{ item.type }}</h4>
           </div>
           <div class="app-subscription">
-            <h1 class="app-title">Community</h1>
+            <h1 class="app-title">{{ item.subscription }}</h1>
             <h4 class="app-type">Plan</h4>
           </div>
           <div class="app-action">
             <input
               type="button"
-              @click="login"
+              @click="editApp(item)"
               value="Edit"
               class="primary-button"
             />
             <input
               type="button"
-              @click="login"
-              value="Delete"
-              class="primary-button"
-            />
-          </div>
-        </div>
-
-        <div class="app-card">
-          <div class="app-framework">
-            <img src="@/assets/django.png" alt="" />
-          </div>
-          <div class="app-details">
-            <h1 class="app-title">Drift app</h1>
-            <h4 class="app-type">Web Application</h4>
-          </div>
-          <div class="app-subscription">
-            <h1 class="app-title">Community</h1>
-            <h4 class="app-type">Plan</h4>
-          </div>
-          <div class="app-action">
-            <input
-              type="button"
-              @click="login"
-              value="Edit"
-              class="primary-button"
-            />
-            <input
-              type="button"
-              @click="login"
-              value="Delete"
-              class="primary-button"
-            />
-          </div>
-        </div>
-
-        <div class="app-card">
-          <div class="app-framework">
-            <img src="@/assets/django.png" alt="" />
-          </div>
-          <div class="app-details">
-            <h1 class="app-title">Drift app</h1>
-            <h4 class="app-type">Web Application</h4>
-          </div>
-          <div class="app-subscription">
-            <h1 class="app-title">Community</h1>
-            <h4 class="app-type">Plan</h4>
-          </div>
-          <div class="app-action">
-            <input
-              type="button"
-              @click="login"
-              value="Edit"
-              class="primary-button"
-            />
-            <input
-              type="button"
-              @click="login"
+              @click="deleteApp(item.id)"
               value="Delete"
               class="primary-button"
             />
@@ -100,17 +56,37 @@
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
-// import layout from "../components/Layout.vue";
+import { mapGetters } from "vuex";
+import router from "../router";
+
 export default {
   name: "Dashboard",
   components: {
     // layout,
   },
   data: () => ({}),
-  computed: {},
-  mounted() {},
-  methods: {},
+  computed: {
+    ...mapGetters(["getAppList"]),
+  },
+  mounted() {
+    this.$store.dispatch("fetchAllApp");
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("logout");
+    },
+    deleteApp(appID) {
+      this.$store.dispatch("deleteApp", appID).then(() => {
+        this.$store.dispatch("fetchAllApp");
+      });
+    },
+    editApp(appDetails) {
+      router.push({
+        name: "CreateApp",
+        params: { appDetails: appDetails },
+      });
+    },
+  },
 };
 </script>
 
@@ -131,16 +107,20 @@ export default {
 .header h1 {
   font-size: 24px;
   color: #fff;
+  flex: 5;
 }
-.header h3 {
-  font-size: 18px;
-  color: #fff;
-  font-weight: 400;
+
+.menu {
+  display: flex;
+  justify-content: space-evenly;
+  flex: 1;
 }
-.header h3 span {
+
+.menu h3 {
   font-size: 18px;
   color: #62f9fc;
   font-weight: 700;
+  cursor: pointer;
 }
 .content-block {
   padding: 10px 80px;
@@ -215,6 +195,22 @@ export default {
   font-size: 18px;
   font-weight: 700;
   font-family: "Montserrat";
+  cursor: pointer;
   margin: 0 10px;
+}
+
+.primary-button:active {
+  background: #2e53e6;
+  border-radius: 10px;
+  border: 0;
+  width: 100%;
+  padding: 20px;
+  margin: 15px 0px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: "Montserrat";
+  margin: 0 10px;
+  cursor: pointer;
 }
 </style>

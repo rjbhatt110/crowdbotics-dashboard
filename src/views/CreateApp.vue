@@ -12,32 +12,46 @@
 
       <div class="app-field">
         <div class="form-group">
-          <label>Email</label>
+          <label>Name</label>
           <input
-            type="email"
+            type="text"
             class="form-control"
-            v-model="email"
-            placeholder="Enter your email address"
+            v-model="name"
+            placeholder="Enter App Name"
           />
         </div>
         <div class="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            class="form-control"
-            v-model="email"
-            placeholder="Enter your email address"
-          />
+          <label>Type</label>
+          <select v-model="type" class="form-control">
+            <option disabled value="">Please Select Type</option>
+            <option>Web</option>
+            <option>Mobile</option>
+          </select>
         </div>
         <div class="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            class="form-control"
-            v-model="email"
-            placeholder="Enter your email address"
-          />
+          <label>Framework</label>
+          <select v-model="framework" class="form-control">
+            <option disabled value="">Please Select Framework</option>
+            <option>Django</option>
+            <option>React Native</option>
+          </select>
         </div>
+
+        <input
+          v-if="!appDetails"
+          type="button"
+          @click="createApp"
+          value="Create an app"
+          class="primary-button"
+        />
+
+        <input
+          v-else
+          type="button"
+          @click="editApp"
+          value="Save"
+          class="primary-button"
+        />
       </div>
     </div>
   </div>
@@ -47,14 +61,47 @@
 // import { mapGetters } from "vuex";
 // import layout from "../components/Layout.vue";
 export default {
-  name: "Dashboard",
-  components: {
-    // layout,
+  name: "CreateApp",
+  props: ["appDetails"],
+  data() {
+    return {
+      name: "",
+      type: "",
+      framework: "",
+    };
   },
-  data: () => ({}),
   computed: {},
-  mounted() {},
-  methods: {},
+  mounted() {
+    if (this.appDetails) {
+      this.name = this.appDetails.name;
+      this.type = this.appDetails.type;
+      this.framework = this.appDetails.framework;
+    }
+  },
+  methods: {
+    createApp() {
+      this.$store
+        .dispatch("createApp", {
+          name: this.name,
+          type: this.type,
+          framework: this.framework,
+        })
+        .then(() => {
+          this.name = "";
+          this.type = "";
+          this.framework = "";
+        });
+    },
+
+    editApp() {
+      this.$store.dispatch("editApp", {
+        id: this.appDetails.id,
+        name: this.name,
+        type: this.type,
+        framework: this.framework,
+      });
+    },
+  },
 };
 </script>
 
@@ -122,12 +169,41 @@ export default {
   border: 3px solid #ffffff;
   border-radius: 10px;
   padding: 20px 15px;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.form-group input:focus {
+  background: rgb(255 255 255 / 10%);
+  border: 3px solid #ffffff;
+  border-radius: 10px;
+  padding: 20px 15px;
+  outline: none;
 }
 
 .form-group .form-control::placeholder {
-  color: #ffffffbb;
+  color: #ffffff;
   font-size: 16px;
   font-family: "Montserrat";
+}
+
+.form-group select {
+  font-size: 16px;
+  font-family: "Montserrat";
+  appearance: none;
+}
+
+.form-group select:focus {
+  background: rgb(255 255 255 / 10%);
+  border: 3px solid #ffffff;
+  border-radius: 10px;
+  padding: 20px 15px;
+  outline: none;
+}
+
+.form-group option {
+  color: #0c2867;
+  font-size: 16px;
 }
 
 .primary-button {
@@ -140,6 +216,21 @@ export default {
   font-size: 18px;
   font-weight: 700;
   font-family: "Montserrat";
-  margin: 0 10px;
+  margin: 10px 0;
+}
+
+.primary-button:active {
+  background: #2e53e6;
+  border-radius: 10px;
+  border: 0;
+  width: 100%;
+  padding: 20px;
+  margin: 15px 0px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: "Montserrat";
+  cursor: pointer;
+  transform: scale(0.98);
 }
 </style>

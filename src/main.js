@@ -5,9 +5,6 @@ import router from './router'
 import Vuex from 'vuex'
 import store from './store'
 // import axios from 'axios';
-// import {
-//   LOGOUT
-// } from "./store/actions.type";
 Vue.config.productionTip = false
 
 import './assets/css/main.css'

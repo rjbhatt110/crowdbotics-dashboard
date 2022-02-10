@@ -1,17 +1,23 @@
 <template>
   <div class="login-container">
-    <div class="side-block"></div>
-
+    <div class="side-block">
+      <div class="header">
+        <h1>Crowdbotics</h1>
+      </div>
+      <div class="illustration">
+        <img class="intro-image" src="@/assets/app-illustration.png" alt="" />
+      </div>
+    </div>
     <div class="field-block">
       <form>
-        <h3 class="header">Let’s Get Started</h3>
+        <h3 class="signup-header">Let’s Get Started</h3>
 
         <div class="form-group">
           <label>Name</label>
           <input
-            type="email"
+            type="text"
             class="form-control"
-            v-model="email"
+            v-model="name"
             placeholder="Enter your email address"
           />
         </div>
@@ -42,16 +48,15 @@
 
         <input
           type="button"
-          @click="login"
+          @click="signUp"
           value="Create an account"
           class="primary-button"
         />
 
         <div class="signup-section">
           <h3 class="signup-label">
-            Already have an account? <span class="forgot-label"
-              >Sign In instead</span
-            >
+            Already have an account?
+            <span class="forgot-label" @click="goToLogin">Sign In instead</span>
           </h3>
         </div>
       </form>
@@ -60,33 +65,40 @@
 </template>
 
 <script>
-// import { LOGIN } from "@/store/actions.type";
 import { mapState } from "vuex";
+import router from "../router";
+
 export default {
-  name: "login",
+  name: "Signup",
   data() {
     return {
+      name: "",
       email: "",
       password: "",
     };
   },
   computed: {
     ...mapState({
-      //   errors: (state) => state.user.errors,
+      errors: (state) => state.auth.errors,
     }),
   },
   methods: {
-    // async login() {
-    //   try {
-    //     const credentials = {
-    //       email: this.email,
-    //       password: this.password,
-    //     };
-    //     this.$store.dispatch(LOGIN, credentials);
-    //   } catch (error) {
-    //     console.log(error.response.data.msg);
-    //   }
-    // },
+    async signUp() {
+      try {
+        const credentials = {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+        };
+        this.$store.dispatch("register", credentials);
+      } catch (error) {
+        console.log(error.response.data.msg);
+      }
+    },
+
+    goToLogin() {
+      router.push("/login");
+    },
   },
 };
 </script>
@@ -112,17 +124,35 @@ export default {
   border-radius: 15px;
 }
 
+.header {
+  margin: 20px 40px;
+}
+
+.header h1 {
+  font-size: 28px;
+  color: #0c2867;
+}
+
+.illustration {
+  display: flex;
+  justify-content: center;
+}
+
+.intro-image {
+  width: 75%;
+}
+
 .field-block {
   flex: 1;
   background: #0c2867;
-  padding: 0 50px;
+  padding: 50px;
 }
 
 form {
   padding: 25px 50px;
 }
 
-.header {
+.signup-header {
   font-size: 48px;
   color: #ffffff;
 }
@@ -143,6 +173,14 @@ form {
   border: 3px solid #ffffff;
   border-radius: 10px;
   padding: 20px 15px;
+}
+
+.form-group input:focus {
+  background: rgb(255 255 255 / 10%);
+  border: 3px solid #ffffff;
+  border-radius: 10px;
+  padding: 20px 15px;
+  outline: none;
 }
 
 .form-group .form-control::placeholder {
@@ -168,6 +206,7 @@ form {
   color: #ffffff;
   font-size: 18px;
   text-align: center;
+  margin: 25px 0;
 }
 .forgot-label {
   font-weight: 700;

@@ -6,61 +6,66 @@ import CreateApp from '../views/CreateApp'
 import AppDetails from '../views/AppDetails'
 
 // import store from '../store'
-// import JwtService from "../services/JwtService";
+import tokenService from "../services/tokenService";
 
 
-// const ifNotAuthenticated = (to, from, next) => {
-//     if (!JwtService.getToken()) {
-//         next()
-//         return
-//     }
-//     next('/')
-// }
+const ifNotAuthenticated = (to, from, next) => {
+    if (!tokenService.getToken()) {
+        next()
+        return
+    }
+    next('/')
+}
 
-// const ifAuthenticated = (to, from, next) => {
-//     if (JwtService.getToken()) {
-//         next()
-//         return
-//     }
-//     next('/login')
-// }
+const ifAuthenticated = (to, from, next) => {
+    if (tokenService.getToken()) {
+        next()
+        return
+    }
+    next('/login')
+}
 
 export default new Router({
     mode: 'history',
     routes: [
         {
             path: '/',
-            name: 'dashboard',
+            redirect: '/dashboard'
+        },
+        {
+            path: '/dashboard',
+            name: 'Dashboard',
             component: Dashboard,
-            // beforeEnter: ifAuthenticated,
+            beforeEnter: ifAuthenticated,
 
         },
         {
             path: '/details',
-            name: 'details',
+            name: 'AppDetails',
             component: AppDetails,
-            // beforeEnter: ifAuthenticated,
+            beforeEnter: ifAuthenticated,
 
         },
         {
             path: '/createApp',
             name: 'CreateApp',
             component: CreateApp,
-            // beforeEnter: ifAuthenticated,
+            props: true,
+            beforeEnter: ifAuthenticated,
 
         },
         {
             path: '/login',
-            name: 'login',
+            name: 'Login',
             component: Login,
-            // beforeEnter: ifNotAuthenticated,
+            beforeEnter: ifNotAuthenticated,
 
         },
         {
             path: '/signup',
-            name: 'signup',
+            name: 'Signup',
             component: Signup,
-            // beforeEnter: ifNotAuthenticated,
+            beforeEnter: ifNotAuthenticated,
 
         }
     ]

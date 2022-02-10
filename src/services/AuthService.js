@@ -1,5 +1,5 @@
 import axios from 'axios';
-import JwtService from "../services/JwtService";
+import tokenService from "../services/tokenService";
 
 const url = 'https://hiring-example-25770.botics.co/';
 export default {
@@ -10,18 +10,27 @@ export default {
     )
       .then(response => response);
   },
+
   // Register New User
   signUp(credentials) {
     return axios
       .post(url + 'rest-auth/registration/', credentials)
-      .then(response => response.data);
+      .then(response => {
+        return response.data
+      });
   },
-  // Get Current loggedIn User
+
   getCurrent() {
     return axios.get(url + 'rest-auth/user/', {
       headers: {
-        'Authorization': `Bearer ${JwtService.getToken()}`
+        'Authorization': `Bearer ${tokenService.getToken()}`
       }
     }).then(response => response.data);
+  },
+
+  // Get Current loggedIn User
+  logout() {
+    return axios.post(url + 'rest-auth/logout/', tokenService.getToken()
+    ).then(response => response.data);
   }
 };
