@@ -1,12 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="header">
-      <h1>Crowdbotics</h1>
-      <div class="menu">
-        <h3>Plans</h3>
-        <h3 @click="logout">Logout</h3>
-      </div>
-    </div>
+    <Header></Header>
     <div class="content-block">
       <div class="page-header">
         <h1>App List</h1>
@@ -14,7 +8,12 @@
       </div>
 
       <div class="app-list">
-        <div v-for="(item, index) in getAppList" :key="index" class="app-card">
+        <div
+          v-for="(item, index) in getAppList"
+          :key="index"
+          class="app-card"
+          @click="gotoDetails(item)"
+        >
           <div class="app-framework">
             <img
               v-if="item.framework === 'Django'"
@@ -32,19 +31,21 @@
             <h4 class="app-type">{{ item.type }}</h4>
           </div>
           <div class="app-subscription">
-            <h1 class="app-title">{{ item.subscription }}</h1>
+            <h1 class="app-title">
+              {{ item.subscription || "No Subscription" }}
+            </h1>
             <h4 class="app-type">Plan</h4>
           </div>
           <div class="app-action">
             <input
               type="button"
-              @click="editApp(item)"
+              @click.stop="editApp(item)"
               value="Edit"
               class="primary-button"
             />
             <input
               type="button"
-              @click="deleteApp(item.id)"
+              @click.stop="deleteApp(item.id)"
               value="Delete"
               class="primary-button"
             />
@@ -58,11 +59,12 @@
 <script>
 import { mapGetters } from "vuex";
 import router from "../router";
+import Header from "../components/header.vue";
 
 export default {
   name: "Dashboard",
   components: {
-    // layout,
+    Header,
   },
   data: () => ({}),
   computed: {
@@ -86,6 +88,15 @@ export default {
         params: { appDetails: appDetails },
       });
     },
+    gotoDetails(appDetails) {
+      router.push({
+        name: "AppDetails",
+        params: { id: appDetails.id },
+      });
+    },
+    gotoCreateApp() {
+      router.push("/createApp");
+    },
   },
 };
 </script>
@@ -107,7 +118,7 @@ export default {
 .header h1 {
   font-size: 24px;
   color: #fff;
-  flex: 5;
+  flex: 3;
 }
 
 .menu {
@@ -204,7 +215,7 @@ export default {
   border-radius: 10px;
   border: 0;
   width: 100%;
-  padding: 20px;
+  padding: 12px 25px;
   margin: 15px 0px;
   color: #ffffff;
   font-size: 18px;
@@ -212,5 +223,6 @@ export default {
   font-family: "Montserrat";
   margin: 0 10px;
   cursor: pointer;
+  transform: scale(0.98);
 }
 </style>

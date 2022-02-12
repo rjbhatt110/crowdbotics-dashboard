@@ -173,6 +173,8 @@ form {
   border: 3px solid #ffffff;
   border-radius: 10px;
   padding: 20px 15px;
+  color: #ffffff;
+  font-size: 18px;
 }
 
 .form-group input:focus {
@@ -195,10 +197,26 @@ form {
   border: 0;
   width: 100%;
   padding: 20px;
+  margin: 5px 0px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Montserrat";
+}
+
+.primary-button:active {
+  background: #2e53e6;
+  border-radius: 10px;
+  border: 0;
+  width: 100%;
+  padding: 20px;
+  margin: 5px 0px;
   color: #ffffff;
   font-size: 18px;
   font-weight: 700;
   font-family: "Montserrat";
+  transform: scale(0.98);
 }
 
 .signup-label {
@@ -213,5 +231,6 @@ form {
   color: #62f9fc;
   font-size: 18px;
   text-align: right;
+  cursor: pointer;
 }
 </style>

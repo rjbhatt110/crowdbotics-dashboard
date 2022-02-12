@@ -22,7 +22,6 @@ const actions = {
     login({ commit }, credentials) {
         AuthService.login(credentials)
             .then((data) => {
-                console.log(data)
                 commit('setAuth', data.data.key);
             })
             .catch(({ response }) => {
@@ -43,7 +42,7 @@ const actions = {
     register({ commit }, credentials) {
         AuthService.signUp(credentials)
             .then(({ data }) => {
-                commit('setAuth', data);
+                commit('setAuth', data.data.key);
             })
             .catch(({ response }) => {
                 commit('setError', response.data.message);

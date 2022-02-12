@@ -4,6 +4,7 @@ import Signup from '../views/Signup'
 import Dashboard from '../views/Dashboard'
 import CreateApp from '../views/CreateApp'
 import AppDetails from '../views/AppDetails'
+import Plan from '../views/Plan'
 
 // import store from '../store'
 import tokenService from "../services/tokenService";
@@ -37,14 +38,12 @@ export default new Router({
             name: 'Dashboard',
             component: Dashboard,
             beforeEnter: ifAuthenticated,
-
         },
         {
-            path: '/details',
+            path: '/details/:id',
             name: 'AppDetails',
             component: AppDetails,
             beforeEnter: ifAuthenticated,
-
         },
         {
             path: '/createApp',
@@ -52,7 +51,12 @@ export default new Router({
             component: CreateApp,
             props: true,
             beforeEnter: ifAuthenticated,
-
+        },
+        {
+            path: '/plan/:id',
+            name: 'Plan',
+            component: Plan,
+            beforeEnter: ifAuthenticated,
         },
         {
             path: '/login',

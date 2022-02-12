@@ -1,46 +1,69 @@
 <template>
   <div class="app-container">
-    <div class="header">
-      <h1>Crowdbotics</h1>
-      <h3>Pricing? <span>Check our plans</span></h3>
-    </div>
+    <Header></Header>
     <div class="content-block">
       <div class="page-header">
-        <h1>Drift app</h1>
-        <p>A paragraph for the main content.</p>
-      </div>
-
-      <div class="app-list">
-        <div class="app-card">
-          <div class="app-framework">
-            <img src="@/assets/django.png" alt="" />
-          </div>
-          <div class="app-details">
-            <h1 class="app-title">Drift app</h1>
-            <h4 class="app-type">Web Application</h4>
-          </div>
-          <div class="app-subscription">
-            <h1 class="app-title">Community</h1>
-            <h4 class="app-type">Plan</h4>
-          </div>
+        <div class="app-framework">
+          <img
+            v-if="getApp.framework === 'Django'"
+            src="@/assets/django.png"
+            alt=""
+          />
+          <img
+            v-if="getApp.framework === 'React Native'"
+            src="@/assets/react.png"
+            alt=""
+          />
         </div>
+        <h1>{{ getApp.name }}</h1>
+        <p>{{ getApp.description || "No description" }}</p>
+        <div class="app-type">
+          <h1>
+            {{ getApp.type }}
+          </h1>
+          <h4>Type</h4>
+        </div>
+        <div class="app-subscription">
+          <h1>
+            {{ getApp.subscription || "No Subscription Plan" }}
+          </h1>
+          <h4>Subscription</h4>
+        </div>
+        <input
+          type="button"
+          @click="UpdatePlan(getApp)"
+          value="Upgrade Plan"
+          class="primary-button"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
-// import layout from "../components/Layout.vue";
+import Header from "../components/header.vue";
+import router from "../router";
+import { mapGetters } from "vuex";
+
 export default {
   name: "AppDetails",
   components: {
-    // layout,
+    Header,
   },
   data: () => ({}),
-  computed: {},
+  computed: { ...mapGetters(["getApp"]) },
+  created() {
+    this.$store.dispatch("fetchApp", this.$route.params.id);
+  },
   mounted() {},
-  methods: {},
+  methods: {
+    UpdatePlan(appDetails) {
+      router.push({
+        name: "Plan",
+        params: { id: appDetails.id },
+      });
+    },
+  },
 };
 </script>
 
@@ -92,59 +115,46 @@ export default {
   margin: 0;
 }
 
-.app-list {
-  width: 70%;
-}
-.app-card {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 10px 0;
-}
-.app-details {
-  flex: 3;
-}
-.app-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #0c2867;
-  margin: 0 0 8px 0;
-}
-.app-type {
-  font-size: 16px;
-  font-weight: 500;
-  color: #2e53e6;
-}
-.app-framework {
-  flex: 1;
-}
 .app-framework img {
   width: 50px;
   height: 50px;
   margin-right: 15px;
 }
-.app-subscription {
-  margin: 0 10px;
-  flex: 2;
+
+.app-type h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
 }
 
-.app-action {
-  display: flex;
+.app-type h4 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #62f9fc;
+}
+
+.app-subscription h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.app-subscription h4 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #62f9fc;
 }
 
 .primary-button {
   background: #2e53e6;
   border-radius: 10px;
   border: 0;
-  width: 100%;
+  width: 20%;
   padding: 12px 25px;
   color: #ffffff;
   font-size: 18px;
   font-weight: 700;
   font-family: "Montserrat";
-  margin: 0 10px;
+  margin: 15px 0;
 }
 </style>

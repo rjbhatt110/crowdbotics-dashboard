@@ -1,9 +1,6 @@
 <template>
   <div class="create-container">
-    <div class="header">
-      <h1>Crowdbotics</h1>
-      <h3>Pricing? <span>Check our plans</span></h3>
-    </div>
+    <Header></Header>
     <div class="content-block">
       <div class="page-header">
         <h1>Create App</h1>
@@ -58,11 +55,14 @@
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
-// import layout from "../components/Layout.vue";
+import Header from "../components/header.vue";
+
 export default {
   name: "CreateApp",
   props: ["appDetails"],
+  components: {
+    Header,
+  },
   data() {
     return {
       name: "",

@@ -3,10 +3,11 @@ import tokenService from "../services/tokenService";
 
 const url = 'https://hiring-example-25770.botics.co/';
 export default {
-    // Create New App
-    createApp(appDetails) {
+    // Add Plan to App
+    addPlan(appDetails) {
+        console.log(appDetails)
         return axios
-            .post(url + 'api/v1/apps/', appDetails, {
+            .post(url + '/api/v1/subscriptions/', appDetails, {
                 headers: {
                     'Authorization': `Token ${tokenService.getToken()}`
                 }
@@ -17,9 +18,9 @@ export default {
     },
 
     // Edit App
-    editApp(appDetails) {
+    editPlan(planDetails) {
         return axios
-            .put(url + `api/v1/apps/${appDetails.id}`, appDetails, {
+            .put(url + `/api/v1/subscriptions/${planDetails.subscriptionID}`, planDetails, {
                 headers: {
                     'Authorization': `Token ${tokenService.getToken()}`
                 }
@@ -29,31 +30,18 @@ export default {
             });
     },
 
-    // Delete App
-    deleteApp(appID) {
-        return axios
-            .delete(url + `api/v1/apps/${appID}`, {
-                headers: {
-                    'Authorization': `Token ${tokenService.getToken()}`
-                }
-            })
-            .then(response => {
-                return response.data
-            });
-    },
-
-    // Get All App
-    getAllApp() {
-        return axios.get(url + '/api/v1/apps/', {
+    // Get All Plans
+    getAllPlans() {
+        return axios.get(url + '/api/v1/plans/', {
             headers: {
                 'Authorization': `Token ${tokenService.getToken()}`
             }
         }).then(response => response.data);
     },
 
-    // Get App
-    getApp(appID) {
-        return axios.get(url + `/api/v1/apps/${appID}`, {
+    // Get Subscriptions
+    getSubscriptions(id) {
+        return axios.get(url + `/api/v1/subscriptions/${id}`, {
             headers: {
                 'Authorization': `Token ${tokenService.getToken()}`
             }

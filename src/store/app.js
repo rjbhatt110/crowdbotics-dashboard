@@ -1,14 +1,19 @@
 import AppService from "../services/AppService";
+import PlanService from "../services/PlanService"
 // import router from "../router/index"
 
 const state = {
     errors: null,
     appList: [],
+    app: {}
 };
 
 const getters = {
     getAppList(state) {
         return state.appList;
+    },
+    getApp(state) {
+        return state.app;
     },
 };
 
@@ -18,9 +23,20 @@ const actions = {
         AppService.createApp(appDetails)
             .then((data) => {
                 console.log(data)
+                PlanService.addPlan({
+                    plan: 1,
+                    app: data.id,
+                    active: true
+                })
+                    .then((data) => {
+                        console.log(data)
+                    })
+                    .catch(({ response }) => {
+                        commit('setError', response.data.message);
+                    });
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 
@@ -54,6 +70,16 @@ const actions = {
             });
     },
 
+    fetchApp({ commit }, appID) {
+        AppService.getApp(appID)
+            .then((data) => {
+                commit('setApp', data);
+            })
+            .catch(({ response }) => {
+                commit('setError', response.data.message);
+            });
+    },
+
 };
 
 const mutations = {
@@ -63,11 +89,14 @@ const mutations = {
     setAppList(state, appList) {
         state.appList = appList;
     },
+    setApp(state, app) {
+        state.app = app;
+    },
 };
 
 export default {
     state,
     actions,
     mutations,
-    getters
+    getters,
 };
