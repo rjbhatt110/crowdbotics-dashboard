@@ -3,7 +3,7 @@
     <Header></Header>
     <div class="content-block">
       <div class="page-header">
-        <h1>Create App</h1>
+        <h1>Edit App</h1>
         <p>A paragraph for the main content.</p>
       </div>
 
@@ -36,8 +36,8 @@
 
         <input
           type="button"
-          @click="createApp"
-          value="Create an app"
+          @click="editApp"
+          value="Save"
           class="primary-button"
         />
       </div>
@@ -47,9 +47,10 @@
 
 <script>
 import Header from "../components/header.vue";
+import { mapGetters } from "vuex";
 
 export default {
-  name: "CreateApp",
+  name: "EditApp",
   components: {
     Header,
   },
@@ -60,20 +61,28 @@ export default {
       framework: "",
     };
   },
-  async mounted() {},
+  computed: { ...mapGetters(["getApp"]) },
+  async created() {
+    await this.$store.dispatch("fetchApp", this.$route.params.id);
+  },
+  async mounted() {
+    setTimeout(() => {
+      if (this.getApp) {
+        console.log(this.getApp);
+        this.name = this.getApp.name;
+        this.type = this.getApp.type;
+        this.framework = this.getApp.framework;
+      }
+    }, 700);
+  },
   methods: {
-    createApp() {
-      this.$store
-        .dispatch("createApp", {
-          name: this.name,
-          type: this.type,
-          framework: this.framework,
-        })
-        .then(() => {
-          this.name = "";
-          this.type = "";
-          this.framework = "";
-        });
+    editApp() {
+      this.$store.dispatch("editApp", {
+        id: this.getApp.id,
+        name: this.name,
+        type: this.type,
+        framework: this.framework,
+      });
     },
   },
 };

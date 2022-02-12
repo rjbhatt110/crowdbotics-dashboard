@@ -49,6 +49,16 @@ const actions = {
             });
     },
 
+    resetPassword({ commit }) {
+        AuthService.ResetPassword()
+            .then(() => {
+                router.push("/login")
+            })
+            .catch(({ response }) => {
+                commit('setError', response.data.message);
+            });
+    },
+
 };
 
 const mutations = {

@@ -3,7 +3,6 @@
     <h1 @click="gotoHome" class="logo">Crowdbotics</h1>
     <div class="menu">
       <h3 @click="gotoCreateApp">Create App</h3>
-      <!-- <h3 @click="gotoPlan">Plans</h3> -->
       <h3 @click="logout">Logout</h3>
     </div>
   </div>
@@ -25,9 +24,6 @@ export default {
     },
     gotoHome() {
       router.push("/dashboard");
-    },
-    gotoPlan() {
-      router.push("/plan");
     },
   },
 };

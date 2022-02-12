@@ -84,8 +84,8 @@ export default {
     },
     editApp(appDetails) {
       router.push({
-        name: "CreateApp",
-        params: { appDetails: appDetails },
+        name: "EditApp",
+        params: { id: appDetails.id },
       });
     },
     gotoDetails(appDetails) {

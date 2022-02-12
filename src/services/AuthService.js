@@ -20,15 +20,12 @@ export default {
       });
   },
 
-  getCurrent() {
-    return axios.get(url + 'rest-auth/user/', {
-      headers: {
-        'Authorization': `Bearer ${tokenService.getToken()}`
-      }
-    }).then(response => response.data);
+  // Reset Password
+  ResetPassword(credentials) {
+    return axios.post(url + '/rest-auth/password/reset/', credentials).then(response => response.data);
   },
 
-  // Get Current loggedIn User
+  // log out User
   logout() {
     return axios.post(url + 'rest-auth/logout/', tokenService.getToken()
     ).then(response => response.data);
