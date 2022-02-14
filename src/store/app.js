@@ -32,7 +32,7 @@ const actions = {
                         console.log(data)
                     })
                     .catch(({ response }) => {
-                        commit('setError', response.data.message);
+                        commit('setError', response);
                     });
             })
             .catch(({ response }) => {
@@ -46,7 +46,7 @@ const actions = {
                 console.log(data)
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 
@@ -54,9 +54,10 @@ const actions = {
         AppService.deleteApp(appID)
             .then((data) => {
                 console.log(data)
+                location.reload();
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 
@@ -66,7 +67,7 @@ const actions = {
                 commit('setAppList', data);
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 
@@ -76,7 +77,7 @@ const actions = {
                 commit('setApp', data);
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 

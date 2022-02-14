@@ -4,12 +4,15 @@
     <div class="content-block">
       <div class="page-header">
         <h1>Create App</h1>
-        <p>A paragraph for the main content.</p>
+        <p>Please fill all the details of app here.</p>
       </div>
 
       <div class="app-field">
         <div class="form-group">
-          <label>Name</label>
+          <div class="error" v-if="$v.name.$error">
+            <label v-if="!$v.name.required">Name is required</label>
+          </div>
+          <label v-else>Name</label>
           <input
             type="text"
             class="form-control"
@@ -18,7 +21,10 @@
           />
         </div>
         <div class="form-group">
-          <label>Type</label>
+          <div class="error" v-if="$v.type.$error">
+            <label v-if="!$v.type.required">Type is required</label>
+          </div>
+          <label v-else>Type</label>
           <select v-model="type" class="form-control">
             <option disabled value="">Please Select Type</option>
             <option>Web</option>
@@ -26,7 +32,10 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Framework</label>
+          <div class="error" v-if="$v.framework.$error">
+            <label v-if="!$v.framework.required">Password is required</label>
+          </div>
+          <label v-else>Framework</label>
           <select v-model="framework" class="form-control">
             <option disabled value="">Please Select Framework</option>
             <option>Django</option>
@@ -47,6 +56,8 @@
 
 <script>
 import Header from "../components/header.vue";
+import { required } from "vuelidate/lib/validators";
+import router from "../router";
 
 export default {
   name: "CreateApp",
@@ -60,20 +71,39 @@ export default {
       framework: "",
     };
   },
+  validations: {
+    name: {
+      required,
+    },
+    type: {
+      required,
+    },
+    framework: {
+      required,
+    },
+  },
   async mounted() {},
   methods: {
     createApp() {
-      this.$store
-        .dispatch("createApp", {
-          name: this.name,
-          type: this.type,
-          framework: this.framework,
-        })
-        .then(() => {
-          this.name = "";
-          this.type = "";
-          this.framework = "";
-        });
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        this.$store
+          .dispatch("createApp", {
+            name: this.name,
+            type: this.type,
+            framework: this.framework,
+          })
+          .then(() => {
+            setTimeout(() => {
+              router.push("/dashboard");
+              this.name = "";
+              this.type = "";
+              this.framework = "";
+            }, 800);
+          });
+      } else {
+        console.log("Field Required Error");
+      }
     },
   },
 };
@@ -84,28 +114,6 @@ export default {
 .create-container {
   background: #0c2867;
   height: 100%;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 30px;
-}
-
-.header h1 {
-  font-size: 24px;
-  color: #fff;
-}
-.header h3 {
-  font-size: 18px;
-  color: #fff;
-  font-weight: 400;
-}
-.header h3 span {
-  font-size: 18px;
-  color: #62f9fc;
-  font-weight: 700;
 }
 .content-block {
   padding: 10px 80px;
@@ -136,6 +144,15 @@ export default {
   color: #fff;
   font-size: 18px;
   margin-bottom: 10px;
+}
+
+.form-group .error {
+  margin-bottom: 10px;
+}
+
+.form-group .error label {
+  color: #ff0000 !important;
+  font-size: 18px;
 }
 
 .form-group .form-control {

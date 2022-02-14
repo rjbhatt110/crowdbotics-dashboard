@@ -10,11 +10,15 @@
     </div>
 
     <div class="field-block">
-      <form>
+      <form @submit.prevent="login">
         <h3 class="login-header">Welcome back!</h3>
 
         <div class="form-group">
-          <label>Email</label>
+          <div class="error" v-if="$v.email.$error">
+            <label v-if="!$v.email.required">Email is required</label>
+            <label v-if="!$v.email.email">Email is not valid</label>
+          </div>
+          <label v-else>Email</label>
           <input
             type="email"
             class="form-control"
@@ -24,26 +28,25 @@
         </div>
 
         <div class="form-group">
-          <label>Password</label>
+          <div class="error" v-if="$v.password.$error">
+            <label v-if="!$v.password.required">Password is required</label>
+            <label v-if="!$v.password.minLength"
+              >Password must be 8 letters</label
+            >
+          </div>
+          <label v-else>Password</label>
           <input
             type="password"
             class="form-control"
             v-model="password"
             placeholder="Enter your password"
           />
-          <h3 class="forgot-label">Forgot your password?</h3>
+          <h3 class="forgot-label" @click="forgotPassword">
+            Forgot your password?
+          </h3>
         </div>
 
-        <div v-if="errors" class="error-messages">
-          <span> {{ errors }}</span>
-        </div>
-
-        <input
-          type="button"
-          @click="login"
-          value="Log in"
-          class="primary-button"
-        />
+        <input type="submit" value="Log in" class="primary-button" />
 
         <div class="signup-section">
           <h3 class="signup-label">Don’t have an account?</h3>
@@ -61,33 +64,48 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import router from "../router";
+import { required, minLength, email } from "vuelidate/lib/validators";
 
 export default {
   name: "Login",
   data() {
     return {
-      email: "demo110@demo.com",
-      password: "12345678",
+      email: "",
+      password: "",
+      submitStatus: null,
     };
   },
-  computed: {
-    ...mapState({
-      errors: (state) => state.auth.errors,
-    }),
+  validations: {
+    email: {
+      required,
+      email,
+    },
+    password: {
+      required,
+      minLength: minLength(8),
+    },
   },
   methods: {
     async login() {
-      try {
-        const credentials = {
-          email: this.email,
-          password: this.password,
-        };
-        this.$store.dispatch("login", credentials);
-      } catch (error) {
-        console.log(error.response.data.msg);
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        try {
+          const credentials = {
+            email: this.email,
+            password: this.password,
+          };
+          this.$store.dispatch("login", credentials);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        console.log("Invalid Error");
       }
+    },
+
+    forgotPassword() {
+      router.push("/forgotPassword");
     },
 
     goToSignup() {
@@ -161,6 +179,15 @@ form {
   color: #fff;
   font-size: 18px;
   margin-bottom: 10px;
+}
+
+.form-group .error {
+  margin-bottom: 10px;
+}
+
+.form-group .error label {
+  color: #ff0000 !important;
+  font-size: 18px;
 }
 
 .form-group .form-control {

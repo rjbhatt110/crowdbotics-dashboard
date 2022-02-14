@@ -70,7 +70,7 @@ export default {
         this.currentPlan = res.plan;
         this.$store.dispatch("fetchAllPlan");
       });
-    }, 500);
+    }, 800);
   },
   methods: {
     activePlan(planID) {

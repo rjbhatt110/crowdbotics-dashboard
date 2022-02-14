@@ -14,17 +14,17 @@
         <h3 class="login-header">Forgot Password! Don't worry</h3>
 
         <div class="form-group">
-          <label>Email</label>
+          <div class="error" v-if="$v.email.$error">
+            <label v-if="!$v.email.required">Email is required</label>
+            <label v-if="!$v.email.email">Email is not valid</label>
+          </div>
+          <label v-else>Email</label>
           <input
             type="email"
             class="form-control"
             v-model="email"
             placeholder="Enter your email address"
           />
-        </div>
-
-        <div v-if="errors" class="error-messages">
-          <span> {{ errors }}</span>
         </div>
 
         <input
@@ -39,8 +39,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-// import router from "../router";
+import { required, email } from "vuelidate/lib/validators";
 
 export default {
   name: "ForgotPassword",
@@ -49,20 +48,26 @@ export default {
       email: "",
     };
   },
-  computed: {
-    ...mapState({
-      errors: (state) => state.auth.errors,
-    }),
+  validations: {
+    email: {
+      required,
+      email,
+    },
   },
   methods: {
     async sendEmail() {
-      try {
-        const credentials = {
-          email: this.email,
-        };
-        this.$store.dispatch("resetPassword", credentials);
-      } catch (error) {
-        console.log(error.response.data.msg);
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        try {
+          const credentials = {
+            email: this.email,
+          };
+          this.$store.dispatch("resetPassword", credentials);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        console.log("Error");
       }
     },
   },
@@ -134,7 +139,14 @@ form {
   font-size: 18px;
   margin-bottom: 10px;
 }
+.form-group .error {
+  margin-bottom: 10px;
+}
 
+.form-group .error label {
+  color: #ff0000 !important;
+  font-size: 18px;
+}
 .form-group .form-control {
   background: transparent;
   border: 3px solid #ffffff;

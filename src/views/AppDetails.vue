@@ -55,7 +55,6 @@ export default {
   created() {
     this.$store.dispatch("fetchApp", this.$route.params.id);
   },
-  mounted() {},
   methods: {
     UpdatePlan(appDetails) {
       router.push({
@@ -72,28 +71,6 @@ export default {
 .app-container {
   background: #0c2867;
   height: 100%;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 30px;
-}
-
-.header h1 {
-  font-size: 24px;
-  color: #fff;
-}
-.header h3 {
-  font-size: 18px;
-  color: #fff;
-  font-weight: 400;
-}
-.header h3 span {
-  font-size: 18px;
-  color: #62f9fc;
-  font-weight: 700;
 }
 .content-block {
   padding: 10px 80px;

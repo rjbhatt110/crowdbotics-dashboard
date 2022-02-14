@@ -25,7 +25,7 @@ const actions = {
                 commit('setAuth', data.data.key);
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 
@@ -35,7 +35,7 @@ const actions = {
                 commit('purgeAuth');
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 
@@ -45,17 +45,17 @@ const actions = {
                 commit('setAuth', data.data.key);
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 
-    resetPassword({ commit }) {
-        AuthService.ResetPassword()
+    resetPassword({ commit }, credentials) {
+        AuthService.ResetPassword(credentials)
             .then(() => {
                 router.push("/login")
             })
             .catch(({ response }) => {
-                commit('setError', response.data.message);
+                commit('setError', response);
             });
     },
 

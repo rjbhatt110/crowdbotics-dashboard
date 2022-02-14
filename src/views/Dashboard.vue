@@ -4,7 +4,7 @@
     <div class="content-block">
       <div class="page-header">
         <h1>App List</h1>
-        <p>A paragraph for the main content.</p>
+        <p>Here its a list of all your app.</p>
       </div>
 
       <div class="app-list">
@@ -78,9 +78,7 @@ export default {
       this.$store.dispatch("logout");
     },
     deleteApp(appID) {
-      this.$store.dispatch("deleteApp", appID).then(() => {
-        this.$store.dispatch("fetchAllApp");
-      });
+      this.$store.dispatch("deleteApp", appID).then(() => {});
     },
     editApp(appDetails) {
       router.push({
@@ -106,19 +104,6 @@ export default {
 .dashboard-container {
   background: #0c2867;
   height: 100%;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 30px;
-}
-
-.header h1 {
-  font-size: 24px;
-  color: #fff;
-  flex: 3;
 }
 
 .menu {

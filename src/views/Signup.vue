@@ -23,7 +23,11 @@
         </div>
 
         <div class="form-group">
-          <label>Email</label>
+          <div class="error" v-if="$v.email.$error">
+            <label v-if="!$v.email.required">Email is required</label>
+            <label v-if="!$v.email.email">Email is not valid</label>
+          </div>
+          <label v-else>Email</label>
           <input
             type="email"
             class="form-control"
@@ -33,17 +37,19 @@
         </div>
 
         <div class="form-group">
-          <label>Password</label>
+          <div class="error" v-if="$v.password.$error">
+            <label v-if="!$v.password.required">Password is required</label>
+            <label v-if="!$v.password.minLength"
+              >Password must be 8 letters</label
+            >
+          </div>
+          <label v-else>Password</label>
           <input
             type="password"
             class="form-control"
             v-model="password"
             placeholder="Enter your password"
           />
-        </div>
-
-        <div v-if="errors" class="error-messages">
-          <span> {{ errors }}</span>
         </div>
 
         <input
@@ -65,8 +71,8 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import router from "../router";
+import { required, minLength, email } from "vuelidate/lib/validators";
 
 export default {
   name: "Signup",
@@ -77,22 +83,32 @@ export default {
       password: "",
     };
   },
-  computed: {
-    ...mapState({
-      errors: (state) => state.auth.errors,
-    }),
+  validations: {
+    email: {
+      required,
+      email,
+    },
+    password: {
+      required,
+      minLength: minLength(8),
+    },
   },
   methods: {
     async signUp() {
-      try {
-        const credentials = {
-          name: this.name,
-          email: this.email,
-          password: this.password,
-        };
-        this.$store.dispatch("register", credentials);
-      } catch (error) {
-        console.log(error.response.data.msg);
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        try {
+          const credentials = {
+            name: this.name,
+            email: this.email,
+            password: this.password,
+          };
+          this.$store.dispatch("register", credentials);
+        } catch (error) {
+          console.log(error.response.data.msg);
+        }
+      } else {
+        console.log("Invalid Error");
       }
     },
 

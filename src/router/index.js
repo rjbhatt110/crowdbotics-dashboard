@@ -7,10 +7,9 @@ import EditApp from '../views/EditApp'
 import AppDetails from '../views/AppDetails'
 import Plan from '../views/Plan'
 import ForgotPassword from '../views/ForgotPassword'
-// import store from '../store'
 import tokenService from "../services/tokenService";
 
-
+// Authentication Check
 const ifNotAuthenticated = (to, from, next) => {
     if (!tokenService.getToken()) {
         next()
@@ -26,7 +25,7 @@ const ifAuthenticated = (to, from, next) => {
     }
     next('/login')
 }
-
+// Application Routes
 export default new Router({
     mode: 'history',
     routes: [
